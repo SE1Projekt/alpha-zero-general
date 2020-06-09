@@ -5,66 +5,80 @@ from .Boese2Logic import Board
 import numpy as np
 
 class Boese2Game(Game):
+
     def __init__(self, n):
         self.n = n
+        self.move = 1
+        self.result = 0
     
     def getInitBoard(self):
         # return initial board (numpy board)
-        b = Board(self.n)
-        return np.array(b.pieces)
+        board = np.full((19,19), -1/3)
+        board[:self.n,:self.n] = np.full((self.n,self.n), 1/3)
+        return np.array(board)
 
     def getBoardSize(self):
         # (a,b) tuple
-        return (self.n, self.n)
+        return (19, 19)
     
     def getActionSize(self):
         # return number of actions
-        return self.n*self.n
+        return 361 # 19*19
     
     def getNextState(self, board, player, action):
-        # if player takes action on board, return next (board,player)
-        # action must be a valid move
-        if action == self.n*self.n:
-            return (board, -player)
         b = Board(self.n)
         b.pieces = np.copy(board)
         move = (int(action/self.n), action%self.n)
-        b.execute_move(move, player)
+        self.result = b.execute_move(move, player)
         return (b.pieces, -player)
     
     def getValidMoves(self, board, player):
-        return #TODO
-    
-    def getGameEnded(self, board, player):
-        # TODO: GET AMOUNT OF FIELDS
+        # return a fixed size binary vector
+        valids = [0]*self.getActionSize()
         b = Board(self.n)
         b.pieces = np.copy(board)
-        if b.has_legal_moves(player):
-            return 0
-        if b.has_legal_moves(-player):
-            return 0
-        if b.countDiff(player) > 0:
-            return 1
-        return 1e-4 #Draw
+        legalMoves =  b.get_legal_moves()
+        for x, y in legalMoves:
+            valids[self.n*x+y]=1
+        return np.array(valids)
+    
+    #White Won: 1
+    #Black Won: -1
+    #Draw: 1e-4
+    #No Result: 0
+    def getGameEnded(self, board, player):
+        if self.result*self.result == 1:
+            return player*self.result
+        return self.result
     
     def getCanonicalForm(self, board, player):
         # return state if player==1, else return -state if player==-1
-        return player*board
+        if player == 1:
+            return board
+        with np.nditer(board, op_flags=['readwrite']) as it:
+            for x in it:
+                if x*x == 1:
+                    x[...] = -x
+        return board
     
     def getSymmetries(self, board, pi):
         # mirror, rotational
-        assert(len(pi) == self.n**2)  # 1 for pass
-        pi_board = np.reshape(pi[:-1], (self.n, self.n))
+        pi_board = np.reshape(pi, (self.n, self.n))
         l = []
 
         for i in range(1, 5):
-            for j in [True, False]:
-                newB = np.rot90(board, i)
-                newPi = np.rot90(pi_board, i)
-                if j:
-                    newB = np.fliplr(newB)
-                    newPi = np.fliplr(newPi)
-                l += [(newB, list(newPi.ravel()) + [pi[-1]])]
+                rotB = np.copy(board)
+                rotB[:self.n,:self.n] = np.rot90(board[:self.n,:self.n], i)
+                rotPi = np.copy(pi_board)
+                rotPi[:self.n,:self.n] = np.rot90(pi_board[:self.n,:self.n], i)
+
+                flipB = np.copy(rotB)
+                flipB[:self.n,:self.n] = np.fliplr(rotB[:self.n,:self.n])
+                flipPi = np.copy(rotPi)
+                flipPi[:self.n,:self.n] = np.fliplr(rotPi[:self.n,:self.n])
+
+                l += [(rotB, list(rotPi.ravel()))]
+                l += [(flipB, list(flipPi.ravel()))]
         return l
     
     def stringRepresentation(self, board):
