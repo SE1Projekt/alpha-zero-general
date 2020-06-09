@@ -31,7 +31,7 @@ class Boese2Game(Game):
         self.move += 1
         if self.move == 3:
             b.seccond_move(-player)
-            return (b.peices, player)
+            return (b.pieces, player)
         return (b.pieces, -player)
     
     def getValidMoves(self, board, player):

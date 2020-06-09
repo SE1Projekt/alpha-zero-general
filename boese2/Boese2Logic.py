@@ -11,7 +11,9 @@ class Board():
     def __init__(self, n):
         self.n = n
         self.pieces = []
-        self.pieces += n*[[1/3]*n + (19-n)*[-1/3]] + (19-n)*[[-1/3]*19]
+        for i in range(n):
+            self.pieces += [[1/3]*n + (19-n)*[-1/3]]
+        self.pieces += (19-n)*[[-1/3]*19]
         i = 0
         while i < 6:
             x = random.randint(0,n-1)
@@ -27,7 +29,7 @@ class Board():
         # Get all the empty squares (color==0)
         for y in range(self.n):
             for x in range(self.n):
-                if self[x][y] == 1/3:
+                if self.pieces[x][y] == 1/3:
                     newmove = (x,y)
                     moves.add(newmove)
         return list(moves)
@@ -35,7 +37,7 @@ class Board():
     def has_legal_moves(self):
         for y in range(self.n):
             for x in range(self.n):
-                if self[x][y] == 1/3:
+                if self.pieces[x][y] == 1/3:
                     return 0
         return 1e-4
 
@@ -56,7 +58,7 @@ class Board():
         for (xoff,yoff) in self.__directions:
             x3 = x + 3*xoff
             y3 = y + 3*yoff
-            if x3 < 0 or x3 > self.n or y3 < 0 or y3 > self.n or self.pieces[x3][y3] != color:
+            if x3 < 0 or x3 > self.n-1 or y3 < 0 or y3 > self.n-1 or self.pieces[x3][y3] != color:
                 continue
             if self.pieces[x + xoff][y + yoff] == -color and self.pieces[x + 2*xoff][y + 2*yoff] == -color:
                 self.pieces[x + xoff][y + yoff] = 1/3
@@ -72,7 +74,7 @@ class Board():
 
         if self.eval(move):
             return color
-        self.remove(self,move)
+        self.remove(move)
         return self.has_legal_moves()
 
     def seccond_move(self, color):
