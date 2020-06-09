@@ -28,8 +28,12 @@ class Boese2Game(Game):
     def getNextState(self, board, player, action):
         b = Board(self.n)
         b.pieces = np.copy(board)
-        move = (int(action/self.n), action%self.n)
+        move = (int(action/19), action%19)
         self.result = b.execute_move(move, player)
+        self.move += 1
+        if self.move == 3:
+            b.seccond_move(-player)
+            return (b.peices, player)
         return (b.pieces, -player)
     
     def getValidMoves(self, board, player):

@@ -1,3 +1,4 @@
+import random
 
 # Black: -1
 # White: 1
@@ -64,4 +65,20 @@ class Board():
             return color
         self.remove(self,move)
         return self.has_legal_moves()
+
+    def seccond_move(self, color):
+        x = random.randint(0,1)
+        y = self.n/2
+        while True:
+            if( x == 1 ):
+                x = self.n-1
+            while(y == self.n/2):
+                y = random.randint(0,self.n-1)
             
+            if(random.randint(0,1) == 0):
+                z = x
+                x = y
+                y = z
+            if(self.pieces[x][y] == 1/3):
+                break
+        self.pieces[x][y] = color
