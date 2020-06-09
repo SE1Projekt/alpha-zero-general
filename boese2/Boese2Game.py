@@ -12,10 +12,8 @@ class Boese2Game(Game):
         self.result = 0
     
     def getInitBoard(self):
-        # return initial board (numpy board)
-        board = np.full((19,19), -1/3)
-        board[:self.n,:self.n] = np.full((self.n,self.n), 1/3)
-        return np.array(board)
+        b = Board(self.n)
+        return np.array(b.pieces)
 
     def getBoardSize(self):
         # (a,b) tuple
