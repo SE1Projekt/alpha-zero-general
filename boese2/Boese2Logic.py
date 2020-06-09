@@ -10,7 +10,16 @@ class Board():
 
     def __init__(self, n):
         self.n = n
-        self.pieces = [[0 for x in range(19)] for y in range(19)]
+        self.pieces = []
+        self.pieces += n*[[1/3]*n + (19-n)*[-1/3]] + (19-n)*[[-1/3]*19]
+        i = 0
+        while i < 6:
+            x = random.randint(0,n-1)
+            y = random.randint(0,n-1)
+            if self.pieces[x][y] != 1/3:
+                continue
+            self.pieces[x][y] = -1/3
+            i += 1
     
     def get_legal_moves(self):
         moves = set()  # stores the legal moves.
