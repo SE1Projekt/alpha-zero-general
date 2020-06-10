@@ -12,6 +12,8 @@ class Boese2Game(Game):
         self.result = 0
     
     def getInitBoard(self):
+        self.move = 1
+        self.result = 0
         b = Board(self.n)
         return np.array(b.pieces)
 

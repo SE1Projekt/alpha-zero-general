@@ -49,11 +49,7 @@ class MCTS():
 
         counts = [x ** (1. / temp) for x in counts]
         counts_sum = float(sum(counts))
-        try:
-            probs = [x / counts_sum for x in counts]
-        except:
-            print(counts)
-            print(canonicalBoard)
+        probs = [x / counts_sum for x in counts]
         return probs
 
     def search(self, canonicalBoard):
