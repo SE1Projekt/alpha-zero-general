@@ -33,6 +33,7 @@ class Boese2Game(Game):
         self.move += 1
         if self.move == 3:
             b.seccond_move(-player)
+            self.move += 1
             return (b.pieces, player)
         return (b.pieces, -player)
     
@@ -52,6 +53,7 @@ class Boese2Game(Game):
     #No Result: 0
     def getGameEnded(self, board, player):
         if self.result*self.result == 1:
+            print("Moves played: " + str(self.move))
             return player*self.result
         return self.result
     

@@ -63,6 +63,7 @@ class NNetWrapper(NeuralNet):
         else:
             print("Checkpoint Directory exists! ")
         self.nnet.model.save_weights(filepath)
+        self.nnet.model.save(filepath + "model")
 
     def load_checkpoint(self, folder='checkpoint', filename='checkpoint.pth.tar'):
         # https://github.com/pytorch/examples/blob/master/imagenet/main.py#L98
