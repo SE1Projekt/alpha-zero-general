@@ -12,6 +12,8 @@ class Boese2Game(Game):
     
     def getInitBoard(self):
         b = Board(self.n)
+        self.Es = {}
+        self.Es[self.stringRepresentation(np.array(b.pieces))] = 0
         return np.array(b.pieces)
 
     def getBoardSize(self):
@@ -27,7 +29,7 @@ class Boese2Game(Game):
         b.pieces = np.copy(board)
         move = (int(action/self.n), action%self.n)
         result = b.execute_move(move, player)
-        self.Es[self.stringRepresentation(b.pieces)] = result
+        self.Es[self.stringRepresentation(np.array(b.pieces))] = result
         # if self.move == 3:
         #     b.seccond_move(-player)
         #     self.move += 1
@@ -49,7 +51,12 @@ class Boese2Game(Game):
     #Draw: 1e-4
     #No Result: 0
     def getGameEnded(self, board, player):
-        r = self.Es[self.stringRepresentation(board)]
+        s = self.stringRepresentation(board)
+        try:
+            r = self.Es[s]
+        except:
+            r = self.Es[self.stringRepresentation(self.getCanonicalForm(board, -player))]
+            self.Es[s] = r
         if r*r == 1:
             #print("Moves played: " + str(self.move))
             return player*r

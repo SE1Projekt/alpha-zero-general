@@ -14,7 +14,7 @@ class Board():
         if empty:
             return
         for i in range(self.n):
-            self.pieces += [[0]*self.n]
+            self.pieces += [[1/3]*self.n]
         i = 0
         while i < 6:
             x = random.randint(0,n-1)
