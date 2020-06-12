@@ -52,10 +52,13 @@ class Boese2Game(Game):
     #No Result: 0
     def getGameEnded(self, board, player):
         s = self.stringRepresentation(board)
+        r = 0
         try:
             r = self.Es[s]
         except:
             r = self.Es[self.stringRepresentation(self.getCanonicalForm(board, -player))]
+            if r*r == 1:
+                r = -r
             self.Es[s] = r
         if r*r == 1:
             #print("Moves played: " + str(self.move))
