@@ -8,12 +8,13 @@ class Board():
 
     __directions = [(1,1),(1,0),(1,-1),(0,-1),(-1,-1),(-1,0),(-1,1),(0,1)]
 
-    def __init__(self, n):
+    def __init__(self, n, empty=False):
         self.n = n
         self.pieces = []
-        for i in range(n):
-            self.pieces += [[1/3]*n + (19-n)*[-1/3]]
-        self.pieces += (19-n)*[[-1/3]*19]
+        if empty:
+            return
+        for i in range(self.n):
+            self.pieces += [[0]*self.n]
         i = 0
         while i < 6:
             x = random.randint(0,n-1)
