@@ -2,7 +2,8 @@ import logging
 import os
 import sys
 from collections import deque
-from pickle import Pickler, Unpickler
+from _pickle import Pickler, Unpickler
+#from pickle import Pickler, Unpickler
 from random import shuffle
 
 import numpy as np
